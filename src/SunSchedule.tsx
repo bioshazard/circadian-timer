@@ -204,7 +204,7 @@ const SunSchedule: React.FC = () => {
   const getLocationAndSunData = async () => {
     try {
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, (err) => {
+        navigator.geolocation.getCurrentPosition(resolve, () => {
           reject(new Error('Location access denied. Please enter your zip code.'));
         });
       });
