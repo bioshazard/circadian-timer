@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Sun, Sunrise, Sunset, Moon, MapPin, RotateCcw } from 'lucide-react';
+import { Clock, Sun, Sunrise, Sunset, MapPin, RotateCcw } from 'lucide-react';
 
 type Schedule = {
   wakeTime: Date;
