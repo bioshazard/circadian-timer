@@ -3,10 +3,10 @@ import { Clock, Sun, Sunrise, Sunset, Moon, MapPin, RotateCcw } from 'lucide-rea
 
 type Schedule = {
   wakeTime: Date;
-  civilDawn: Date;
+  walkMorning: Date;
   sunrise: Date;
   sunset: Date;
-  civilDusk: Date;
+  walkNight: Date;
   toddlerBedTime: Date;
   adultBedTime: Date;
 };
@@ -158,22 +158,30 @@ const SunSchedule: React.FC = () => {
         `https://api.sunrise-sunset.org/json?lat=${latitude}&lng=${longitude}&date=today&formatted=0`
       );
       const data: SunResponse = await response.json();
+      const minute = 60 * 1000
+
+      /**
+       * https://www.youtube.com/watch?v=WDv4AWk0J3U
+       * low solar angle
+       * first 5m after waking
+       */
       
       if (data.status === 'OK') {
         const sunriseTime = new Date(data.results.sunrise);
         const sunsetTime = new Date(data.results.sunset);
-        const civilDawn = new Date(sunriseTime.getTime() - 35 * 60000);
-        const civilDusk = new Date(sunsetTime.getTime() + 35 * 60000);
-        const wakeTime = new Date(civilDawn.getTime() - 45 * 60000);
-        const adultBedTime = new Date(sunsetTime.getTime() + 2.5 * 60 * 60000);
-        const toddlerBedTime = new Date(wakeTime.getTime() - 11 * 60 * 60 * 1000);
+
+        const wakeTime = new Date(sunriseTime.getTime() - 10 * minute);
+        // const walkMorning = new Date(wakeTime.getTime() + 10 * minute);
+        const walkNight = new Date(sunsetTime.getTime() - 35 * minute);
+        const adultBedTime = new Date(sunsetTime.getTime() + 2.5 * 60 * minute);
+        const toddlerBedTime = new Date(wakeTime.getTime() - 11 * 60 * minute);
 
         setSchedule({
-          wakeTime,
-          civilDawn,
           sunrise: sunriseTime,
           sunset: sunsetTime,
-          civilDusk,
+          wakeTime,
+          walkMorning: sunriseTime,
+          walkNight,
           adultBedTime,
           toddlerBedTime,
         });
@@ -303,32 +311,46 @@ const SunSchedule: React.FC = () => {
               )}
               
               <div className="space-y-3 md:space-y-4">
+
                 <div className="flex items-center gap-3 text-sm md:text-base">
                   <Clock className="h-4 w-4 md:h-5 md:w-5 text-blue-500 flex-shrink-0" />
                   <span className="font-semibold">Wake Up:</span>
                   <span className="ml-auto">{formatTime(schedule.wakeTime)}</span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-sm md:text-base">
                   <Sunrise className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
+                  <span className="font-semibold">Sunrise:</span>
+                  <span className="ml-auto">{formatTime(schedule.sunrise)}</span>
+                </div>
+                
+                <div className="flex items-center gap-3 text-sm md:text-base">
+                  <Sun className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
                   <span className="font-semibold">Morning Walk:</span>
-                  <span className="ml-auto">{formatTime(schedule.civilDawn)} - {formatTime(schedule.sunrise)}</span>
+                  {/* <span className="ml-auto">{formatTime(schedule.civilDawn)} - {formatTime(schedule.sunrise)}</span> */}
+                  <span className="ml-auto">{formatTime(schedule.walkMorning)}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Sunset className="h-4 w-4 md:h-5 md:w-5 text-orange-500 flex-shrink-0" />
+                  <Sun className="h-4 w-4 md:h-5 md:w-5 text-orange-500 flex-shrink-0" />
                   <span className="font-semibold">Evening Walk:</span>
-                  <span className="ml-auto">{formatTime(schedule.sunset)} - {formatTime(schedule.civilDusk)}</span>
+                  <span className="ml-auto">{formatTime(schedule.walkNight)}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Moon className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
+                  <Sunset className="h-4 w-4 md:h-5 md:w-5 text-blue-500 flex-shrink-0" />
+                  <span className="font-semibold">Sunset:</span>
+                  <span className="ml-auto">{formatTime(schedule.sunset)}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm md:text-base">
+                  <Clock className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
                   <span className="font-semibold">Target Toddler Bedtime:</span>
                   <span className="ml-auto">{formatTime(schedule.toddlerBedTime)}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Moon className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
+                  <Clock className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
                   <span className="font-semibold">Target Adult Bedtime:</span>
                   <span className="ml-auto">{formatTime(schedule.adultBedTime)}</span>
                 </div>
