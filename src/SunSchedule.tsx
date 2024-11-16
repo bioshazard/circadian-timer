@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Sun, Sunrise, Sunset, MapPin, RotateCcw } from 'lucide-react';
+import { Clock, Sun, Sunrise, Sunset, MapPin, RotateCcw, Footprints } from 'lucide-react';
 
 type Schedule = {
   wakeTime: Date;
@@ -173,7 +173,7 @@ const SunSchedule: React.FC = () => {
         const wakeTime = new Date(sunriseTime.getTime() - 10 * minute);
         // const walkMorning = new Date(wakeTime.getTime() + 10 * minute);
         const walkNight = new Date(sunsetTime.getTime() - 35 * minute);
-        const adultBedTime = new Date(sunsetTime.getTime() + 2.5 * 60 * minute);
+        const adultBedTime = new Date(wakeTime.getTime() - 8.5 * 60 * minute);
         const toddlerBedTime = new Date(wakeTime.getTime() - 11 * 60 * minute);
 
         setSchedule({
@@ -313,7 +313,7 @@ const SunSchedule: React.FC = () => {
               <div className="space-y-3 md:space-y-4">
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Clock className="h-4 w-4 md:h-5 md:w-5 text-blue-500 flex-shrink-0" />
+                  <Clock className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
                   <span className="font-semibold">Wake Up:</span>
                   <span className="ml-auto">{formatTime(schedule.wakeTime)}</span>
                 </div>
@@ -322,19 +322,6 @@ const SunSchedule: React.FC = () => {
                   <Sunrise className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
                   <span className="font-semibold">Sunrise:</span>
                   <span className="ml-auto">{formatTime(schedule.sunrise)}</span>
-                </div>
-                
-                <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Sun className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
-                  <span className="font-semibold">Morning Walk:</span>
-                  {/* <span className="ml-auto">{formatTime(schedule.civilDawn)} - {formatTime(schedule.sunrise)}</span> */}
-                  <span className="ml-auto">{formatTime(schedule.walkMorning)}</span>
-                </div>
-
-                <div className="flex items-center gap-3 text-sm md:text-base">
-                  <Sun className="h-4 w-4 md:h-5 md:w-5 text-orange-500 flex-shrink-0" />
-                  <span className="font-semibold">Evening Walk:</span>
-                  <span className="ml-auto">{formatTime(schedule.walkNight)}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
@@ -345,16 +332,28 @@ const SunSchedule: React.FC = () => {
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
                   <Clock className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
-                  <span className="font-semibold">Target Toddler Bedtime:</span>
+                  <span className="font-semibold">Toddler Bedtime (11h):</span>
                   <span className="ml-auto">{formatTime(schedule.toddlerBedTime)}</span>
                 </div>
 
                 <div className="flex items-center gap-3 text-sm md:text-base">
                   <Clock className="h-4 w-4 md:h-5 md:w-5 text-indigo-500 flex-shrink-0" />
-                  <span className="font-semibold">Target Adult Bedtime:</span>
+                  <span className="font-semibold">Adult Bedtime (8h):</span>
                   <span className="ml-auto">{formatTime(schedule.adultBedTime)}</span>
                 </div>
               </div>
+                
+                {/* <div className="flex items-center gap-3 text-sm md:text-base">
+                  <Footprints className="h-4 w-4 md:h-5 md:w-5 text-orange-400 flex-shrink-0" />
+                  <span className="font-semibold">Morning Walk:</span>
+                  <span className="ml-auto">{formatTime(schedule.walkMorning)}</span>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm md:text-base">
+                  <Footprints className="h-4 w-4 md:h-5 md:w-5 text-blue-500 flex-shrink-0" />
+                  <span className="font-semibold">Evening Walk:</span>
+                  <span className="ml-auto">{formatTime(schedule.walkNight)}</span>
+                </div> */}
 
               <div className="mt-6 space-y-2 text-xs md:text-sm text-gray-600">
                 <p>* Times are calculated based on your location</p>
